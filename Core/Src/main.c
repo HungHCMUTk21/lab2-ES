@@ -53,9 +53,7 @@
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
 void system_init();
-void test_LedDebug();
-void test_LedY0();
-void test_LedY1();
+void traffic_light_op();
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -106,9 +104,7 @@ int main(void)
 	  while(!flag_timer2);
 	  flag_timer2 = 0;
 	  // main task , every 50 ms
-	  test_LedDebug();
-	  test_LedY0();
-	  test_LedY1();
+	  traffic_light_op();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -171,44 +167,39 @@ void system_init (){
 	setTimer2(50);
 }
 
+uint8_t traffic_light_count = 0;
+uint8_t traffic_light_state = 1;
 
-uint8_t count_led_debug = 0;
-
-uint8_t count_led_Y0 = 0;
-uint8_t led_Y0_flag = 0;
-uint8_t count_led_Y1 = 0;
-uint8_t led_Y1_flag = 0;
-
-void test_LedDebug(){
-	count_led_debug = (count_led_debug + 1)%40;
-	if(count_led_debug == 0){
-		HAL_GPIO_TogglePin(DEBUG_LED_GPIO_Port, DEBUG_LED_Pin);
+void traffic_light_op(){
+	switch (traffic_light_state) {
+		case 1:
+			HAL_GPIO_WritePin(OUTPUT_Y0_GPIO_Port, OUTPUT_Y0_Pin, SET);
+			HAL_GPIO_WritePin(DEBUG_LED_GPIO_Port, DEBUG_LED_Pin, RESET);
+			HAL_GPIO_WritePin(OUTPUT_Y1_GPIO_Port, OUTPUT_Y1_Pin, RESET);
+			break;
+		case 2:
+			HAL_GPIO_WritePin(OUTPUT_Y0_GPIO_Port, OUTPUT_Y0_Pin, RESET);
+			HAL_GPIO_WritePin(DEBUG_LED_GPIO_Port, DEBUG_LED_Pin, SET);
+			HAL_GPIO_WritePin(OUTPUT_Y1_GPIO_Port, OUTPUT_Y1_Pin, RESET);
+			break;
+		case 3:
+			HAL_GPIO_WritePin(OUTPUT_Y0_GPIO_Port, OUTPUT_Y0_Pin, RESET);
+			HAL_GPIO_WritePin(DEBUG_LED_GPIO_Port, DEBUG_LED_Pin, RESET);
+			HAL_GPIO_WritePin(OUTPUT_Y1_GPIO_Port, OUTPUT_Y1_Pin, SET);
+			break;
+		default:
+			break;
 	}
-}
 
-void test_LedY0(){
-	count_led_Y0++;
-	if(count_led_Y0 == 40 && led_Y0_flag){
-		HAL_GPIO_WritePin(OUTPUT_Y0_GPIO_Port, OUTPUT_Y0_Pin, RESET);
-		led_Y0_flag = 0;
-		count_led_Y0 = 0;
-	}else if(count_led_Y0 == 80 && !led_Y0_flag){
-		HAL_GPIO_WritePin(OUTPUT_Y0_GPIO_Port, OUTPUT_Y0_Pin, SET);
-		led_Y0_flag++;
-		count_led_Y0 = 0;
-	}
-}
+	traffic_light_count++;
 
-void test_LedY1(){
-	count_led_Y1++;
-	if(count_led_Y1 == 100 && led_Y1_flag){
-		HAL_GPIO_WritePin(OUTPUT_Y1_GPIO_Port, OUTPUT_Y1_Pin, RESET);
-		led_Y1_flag = 0;
-		count_led_Y1 = 0;
-	}else if(count_led_Y1 == 20 && !led_Y1_flag){
-		HAL_GPIO_WritePin(OUTPUT_Y1_GPIO_Port, OUTPUT_Y1_Pin, SET);
-		led_Y1_flag++;
-		count_led_Y1 = 1;
+	if(traffic_light_count == 100){
+		traffic_light_state = 2;
+	}else if(traffic_light_count == 160){
+		traffic_light_state = 3;
+	}else if(traffic_light_count == 180){
+		traffic_light_count = 0;
+		traffic_light_state = 1;
 	}
 }
 /* USER CODE END 4 */
