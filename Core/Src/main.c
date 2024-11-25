@@ -53,7 +53,8 @@
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
 void system_init();
-void traffic_light_op();
+void test_led7seg();
+void custom_led7scan();
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -94,6 +95,7 @@ int main(void)
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
   system_init();
+  test_led7seg();
   led7_SetColon(1);
   /* USER CODE END 2 */
 
@@ -104,7 +106,7 @@ int main(void)
 	  while(!flag_timer2);
 	  flag_timer2 = 0;
 	  // main task , every 50 ms
-	  traffic_light_op();
+	  custom_led7scan();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -163,43 +165,25 @@ void system_init (){
 	HAL_GPIO_WritePin(OUTPUT_Y0_GPIO_Port, OUTPUT_Y0_Pin, RESET);
 	HAL_GPIO_WritePin(OUTPUT_Y1_GPIO_Port, OUTPUT_Y1_Pin, RESET);
 	HAL_GPIO_WritePin(DEBUG_LED_GPIO_Port, DEBUG_LED_Pin, RESET);
+	led7_init();
 	timer_init();
 	setTimer2(50);
 }
 
-uint8_t traffic_light_count = 0;
-uint8_t traffic_light_state = 1;
+void test_led7seg(){
+	led7_SetDigit(1, 0, 0);
+	led7_SetDigit(2, 1, 0);
+	led7_SetDigit(3, 2, 0);
+	led7_SetDigit(4, 3, 0);
+}
 
-void traffic_light_op(){
-	switch (traffic_light_state) {
-		case 1:
-			HAL_GPIO_WritePin(OUTPUT_Y0_GPIO_Port, OUTPUT_Y0_Pin, SET);
-			HAL_GPIO_WritePin(DEBUG_LED_GPIO_Port, DEBUG_LED_Pin, RESET);
-			HAL_GPIO_WritePin(OUTPUT_Y1_GPIO_Port, OUTPUT_Y1_Pin, RESET);
-			break;
-		case 2:
-			HAL_GPIO_WritePin(OUTPUT_Y0_GPIO_Port, OUTPUT_Y0_Pin, RESET);
-			HAL_GPIO_WritePin(DEBUG_LED_GPIO_Port, DEBUG_LED_Pin, SET);
-			HAL_GPIO_WritePin(OUTPUT_Y1_GPIO_Port, OUTPUT_Y1_Pin, RESET);
-			break;
-		case 3:
-			HAL_GPIO_WritePin(OUTPUT_Y0_GPIO_Port, OUTPUT_Y0_Pin, RESET);
-			HAL_GPIO_WritePin(DEBUG_LED_GPIO_Port, DEBUG_LED_Pin, RESET);
-			HAL_GPIO_WritePin(OUTPUT_Y1_GPIO_Port, OUTPUT_Y1_Pin, SET);
-			break;
-		default:
-			break;
-	}
+uint8_t scancount = 0;
 
-	traffic_light_count++;
-
-	if(traffic_light_count == 100){
-		traffic_light_state = 2;
-	}else if(traffic_light_count == 160){
-		traffic_light_state = 3;
-	}else if(traffic_light_count == 180){
-		traffic_light_count = 0;
-		traffic_light_state = 1;
+void custom_led7scan(){//1Hz scan
+	scancount++;
+	if (scancount == 20){
+		led7_Scan();
+		scancount = 0;
 	}
 }
 /* USER CODE END 4 */
