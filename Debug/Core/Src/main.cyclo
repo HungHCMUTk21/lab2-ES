@@ -2,5 +2,5 @@
 ../Core/Src/main.c:121:6:SystemClock_Config	3
 ../Core/Src/main.c:164:6:system_init	1
 ../Core/Src/main.c:173:6:test_led7seg	1
-../Core/Src/main.c:182:6:custom_led7scan	2
-../Core/Src/main.c:195:6:Error_Handler	1
+../Core/Src/main.c:182:6:custom_led7scan	1
+../Core/Src/main.c:191:6:Error_Handler	1

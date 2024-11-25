@@ -105,7 +105,7 @@ int main(void)
   {
 	  while(!flag_timer2);
 	  flag_timer2 = 0;
-	  // main task , every 50 ms
+	  // main task , every 40ms ms
 	  custom_led7scan();
     /* USER CODE END WHILE */
 
@@ -167,7 +167,7 @@ void system_init (){
 	HAL_GPIO_WritePin(DEBUG_LED_GPIO_Port, DEBUG_LED_Pin, RESET);
 	led7_init();
 	timer_init();
-	setTimer2(50);
+	setTimer2(40);
 }
 
 void test_led7seg(){
@@ -179,12 +179,8 @@ void test_led7seg(){
 
 uint8_t scancount = 0;
 
-void custom_led7scan(){//1Hz scan
-	scancount++;
-	if (scancount == 20){
-		led7_Scan();
-		scancount = 0;
-	}
+void custom_led7scan(){//25Hz scan
+	led7_Scan();
 }
 /* USER CODE END 4 */
 
