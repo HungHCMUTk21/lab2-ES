@@ -1017,8 +1017,8 @@ void system_init (){
  80008ee:	f7ff fe87 	bl	8000600 <led7_init>
 	timer_init();
  80008f2:	f000 f82b 	bl	800094c <timer_init>
-	setTimer2(40);
- 80008f6:	2028      	movs	r0, #40	@ 0x28
+	setTimer2(10);
+ 80008f6:	200a      	movs	r0, #10
  80008f8:	f000 f832 	bl	8000960 <setTimer2>
 }
  80008fc:	bf00      	nop
@@ -1058,7 +1058,7 @@ void test_led7seg(){
 
 uint8_t scancount = 0;
 
-void custom_led7scan(){//25Hz scan
+void custom_led7scan(){//100Hz scan
  8000934:	b580      	push	{r7, lr}
  8000936:	af00      	add	r7, sp, #0
 	led7_Scan();

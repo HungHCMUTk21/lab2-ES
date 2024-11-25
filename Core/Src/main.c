@@ -167,7 +167,7 @@ void system_init (){
 	HAL_GPIO_WritePin(DEBUG_LED_GPIO_Port, DEBUG_LED_Pin, RESET);
 	led7_init();
 	timer_init();
-	setTimer2(40);
+	setTimer2(10);
 }
 
 void test_led7seg(){
@@ -179,7 +179,7 @@ void test_led7seg(){
 
 uint8_t scancount = 0;
 
-void custom_led7scan(){//25Hz scan
+void custom_led7scan(){//100Hz scan
 	led7_Scan();
 }
 /* USER CODE END 4 */
