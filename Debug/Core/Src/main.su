@@ -1,6 +1,7 @@
-../Core/Src/main.c:69:5:main	8	static
-../Core/Src/main.c:121:6:SystemClock_Config	88	static
-../Core/Src/main.c:164:6:system_init	8	static
-../Core/Src/main.c:173:6:test_led7seg	8	static
-../Core/Src/main.c:182:6:custom_led7scan	8	static
-../Core/Src/main.c:195:6:Error_Handler	4	static,ignoring_inline_asm
+../Core/Src/main.c:70:5:main	8	static
+../Core/Src/main.c:123:6:SystemClock_Config	88	static
+../Core/Src/main.c:166:6:system_init	8	static
+../Core/Src/main.c:178:6:led7seg_clock	8	static
+../Core/Src/main.c:194:6:colon_scan	8	static
+../Core/Src/main.c:208:6:display_clock	8	static
+../Core/Src/main.c:222:6:Error_Handler	4	static,ignoring_inline_asm

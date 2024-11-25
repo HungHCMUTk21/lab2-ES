@@ -53,8 +53,9 @@
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
 void system_init();
-void test_led7seg();
-void custom_led7scan();
+void led7seg_clock();
+void colon_scan();
+void display_clock();
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -95,8 +96,8 @@ int main(void)
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
   system_init();
-  test_led7seg();
   led7_SetColon(1);
+  display_clock();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -106,7 +107,8 @@ int main(void)
 	  while(!flag_timer2);
 	  flag_timer2 = 0;
 	  // main task , every 50 ms
-	  custom_led7scan();
+	  led7seg_clock();
+	  colon_scan();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -170,21 +172,46 @@ void system_init (){
 	setTimer2(50);
 }
 
-void test_led7seg(){
-	led7_SetDigit(1, 0, 0);
-	led7_SetDigit(2, 1, 0);
-	led7_SetDigit(3, 2, 0);
-	led7_SetDigit(4, 3, 0);
+uint8_t hour = 0;
+uint8_t minute = 0;
+int clk_count = 0;
+void led7seg_clock(){
+	clk_count++;
+
+	if(clk_count >= 1200){
+		if(minute >= 60){
+			minute = 0;
+			hour++;
+		}else minute++;
+
+		display_clock();
+		clk_count = 0;
+	}
 }
 
-uint8_t scancount = 0;
+uint8_t colon_count = 0;
+uint8_t colon_flag = 0;
+void colon_scan(){
+	colon_count++;
+	if (colon_count >= 10){
+		if (colon_flag){
+			colon_flag = 0;
+		}else{
+			colon_flag = 1;
+		}
 
-void custom_led7scan(){//1Hz scan
-	scancount++;
-	if (scancount == 20){
-		led7_Scan();
-		scancount = 0;
+		led7_SetColon(colon_flag);
+		colon_count = 0;
 	}
+}
+
+void display_clock(){
+	//hour display
+	led7_SetDigit(hour/10, 0, 0);
+	led7_SetDigit(hour%10, 1, 0);
+	//minute display
+	led7_SetDigit(minute/10, 2, 0);
+	led7_SetDigit(minute%10, 3, 0);
 }
 /* USER CODE END 4 */
 
