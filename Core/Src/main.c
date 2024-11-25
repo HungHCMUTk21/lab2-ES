@@ -175,7 +175,7 @@ void system_init (){
 uint8_t count_led_debug = 0;
 
 uint8_t count_led_Y0 = 0;
-
+uint8_t led_Y0_flag = 0;
 uint8_t count_led_Y1 = 0;
 uint8_t led_Y1_flag = 0;
 
@@ -188,21 +188,27 @@ void test_LedDebug(){
 
 void test_LedY0(){
 	count_led_Y0++;
-	if(count_led_Y0 == 40){
+	if(count_led_Y0 == 40 && led_Y0_flag){
 		HAL_GPIO_WritePin(OUTPUT_Y0_GPIO_Port, OUTPUT_Y0_Pin, RESET);
-	}else if(count_led_Y0 == 120){
+		led_Y0_flag = 0;
+		count_led_Y0 = 0;
+	}else if(count_led_Y0 == 80 && !led_Y0_flag){
 		HAL_GPIO_WritePin(OUTPUT_Y0_GPIO_Port, OUTPUT_Y0_Pin, SET);
+		led_Y0_flag++;
 		count_led_Y0 = 0;
 	}
 }
 
 void test_LedY1(){
 	count_led_Y1++;
-	if(count_led_Y1 == 100){
+	if(count_led_Y1 == 100 && led_Y1_flag){
 		HAL_GPIO_WritePin(OUTPUT_Y1_GPIO_Port, OUTPUT_Y1_Pin, RESET);
-	} else if(count_led_Y1 == 120){
-		HAL_GPIO_WritePin(OUTPUT_Y0_GPIO_Port, OUTPUT_Y1_Pin, SET);
+		led_Y1_flag = 0;
 		count_led_Y1 = 0;
+	}else if(count_led_Y1 == 20 && !led_Y1_flag){
+		HAL_GPIO_WritePin(OUTPUT_Y1_GPIO_Port, OUTPUT_Y1_Pin, SET);
+		led_Y1_flag++;
+		count_led_Y1 = 1;
 	}
 }
 /* USER CODE END 4 */
